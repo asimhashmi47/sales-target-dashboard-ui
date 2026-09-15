@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en" class="theme-dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      (function () {
+        var stored = localStorage.getItem("sales-dashboard-theme");
+        var theme = stored || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+        document.documentElement.classList.toggle("theme-light", theme === "light");
+        document.documentElement.classList.toggle("theme-dark", theme !== "light");
+      })();
+    </script>
+    <title>Sales Target Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="shell">
+      <div class="shell__inner">
+        <a class="brand" href="#" aria-label="Sales Target dashboard home">
+          <span class="brand__mark" aria-hidden="true">◎</span>
+          <span>Sales Target</span>
+        </a>
+
+        <div class="period-tabs" role="tablist" aria-label="Reporting period">
+          <button class="period-tabs__button is-active" type="button" data-period="thisMonth" role="tab" aria-selected="true">
+            This Month
+          </button>
+          <button class="period-tabs__button" type="button" data-period="lastMonth" role="tab" aria-selected="false">
+            Last Month
+          </button>
+          <button class="period-tabs__button" type="button" data-period="thisQuarter" role="tab" aria-selected="false">
+            This QTR
+          </button>
+        </div>
+
+        <div class="shell__meta">
+          <span class="live-pill"><span></span>Live</span>
+          <span class="time-chip" id="days-left">11 days left in March</span>
+          <button class="icon-button" type="button" id="theme-toggle" aria-label="Toggle light and dark theme">◐</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <section class="status-band" aria-label="Target status">
+        <div class="status-band__copy">
+          <span class="status-band__dot" aria-hidden="true"></span>
+          <span class="status-tag" id="status-tag">On Track</span>
+          <p id="status-copy">Pace required: <strong>$1,227 / day</strong> across remaining 11 days to hit 100% quota.</p>
+        </div>
+        <div class="status-band__actions">
+          <span class="velocity-chip" id="velocity-chip">+13.2% Pace Velocity</span>
+          <button class="icon-button" type="button" id="recalculate" aria-label="Recalculate dashboard">↻</button>
+        </div>
+      </section>
+
+      <section class="hero-panel" aria-label="Sales quota progress">
+        <div class="hero-panel__side hero-panel__side--left">
+          <article class="mini-metric">
+            <span class="metric-label">Daily Velocity</span>
+            <strong id="velocity-value">$1,825</strong>
+            <span class="metric-positive">Average actual pace</span>
+          </article>
+          <article class="mini-metric">
+            <span class="metric-label">Closed Transactions</span>
+            <strong id="deals-value">28</strong>
+            <span id="deal-size">Avg deal size: $1,303</span>
+          </article>
+        </div>
+
+        <div class="gauge-card">
+          <svg class="gauge" viewBox="0 0 240 240" role="img" aria-labelledby="gauge-title gauge-desc">
+            <title id="gauge-title">Quota achievement gauge</title>
+            <desc id="gauge-desc">A circular gauge showing current sales attainment.</desc>
+            <defs>
+              <linearGradient id="gauge-gradient" x1="20%" x2="80%" y1="80%" y2="20%">
+                <stop offset="0%" stop-color="#10b981" />
+                <stop offset="100%" stop-color="#4cd7f6" />
+              </linearGradient>
+            </defs>
+            <circle class="gauge__track" cx="120" cy="120" r="92" />
+            <circle class="gauge__fill" id="gauge-fill" cx="120" cy="120" r="92" />
+            <g class="gauge__ticks" aria-hidden="true">
+              <circle cx="58" cy="180" r="2.4" />
+              <circle cx="42" cy="116" r="2.4" />
+              <circle cx="70" cy="54" r="2.4" />
+              <circle cx="150" cy="38" r="2.4" />
+            </g>
+          </svg>
+          <div class="gauge-readout">
+            <span class="delta-pill" id="delta-pill">+4.2% vs last month</span>
+            <strong id="percent-value">73%</strong>
+            <span class="metric-label">Quota Achieved</span>
+            <span class="quota-pill"><b id="achieved-pill">$36,500</b> / <span id="target-pill">$50,000</span></span>
+          </div>
+        </div>
+
+        <div class="hero-panel__side hero-panel__side--right">
+          <article class="mini-metric">
+            <span class="metric-label">Projected Month-End</span>
+            <strong class="metric-positive" id="projected-value">$56,200</strong>
+            <span id="projected-copy">112.4% of Target Baseline</span>
+          </article>
+          <article class="mini-metric">
+            <span class="metric-label">Remaining Balance</span>
+            <strong class="metric-warning" id="remaining-hero">$13,500</strong>
+            <span id="remaining-copy">11 days remaining</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="kpi-grid" aria-label="Core performance metrics">
+        <article class="kpi-card">
+          <div class="kpi-card__top"><span>Monthly Target</span><span>⚑</span></div>
+          <strong id="kpi-target">$50,000</strong>
+          <p id="kpi-target-copy">Fixed baseline - Mar 1 to 31</p>
+        </article>
+        <article class="kpi-card">
+          <div class="kpi-card__top"><span>Achieved Sales</span><span>✓</span></div>
+          <strong class="metric-positive" id="kpi-achieved">$36,500</strong>
+          <p><span class="inline-badge" id="kpi-percent">73%</span> <span id="kpi-achieved-copy">28 closed wins this period</span></p>
+        </article>
+        <article class="kpi-card">
+          <div class="kpi-card__top"><span>Remaining Target</span><span>⌛</span></div>
+          <strong class="metric-warning" id="kpi-remaining">$13,500</strong>
+          <p><span class="inline-badge inline-badge--warning" id="kpi-left">27% left</span> <span id="kpi-remaining-copy">11 days remaining</span></p>
+        </article>
+        <article class="kpi-card">
+          <div class="kpi-card__top"><span>Current Run Rate</span><span>◒</span></div>
+          <strong id="kpi-run-rate">$1,825<span>/day</span></strong>
+          <p id="kpi-run-rate-copy">Req pace: $1,227/d - +13.2% ahead</p>
+        </article>
+      </section>
+
+      <section class="analysis-grid">
+        <article class="chart-panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Cumulative Sales Pace vs Target Line</h2>
+              <p>Real-time daily progress benchmarked against linear quota line</p>
+            </div>
+            <div class="segmented" aria-label="Chart mode">
+              <button class="is-active" type="button" data-chart="cumulative">Cumulative</button>
+              <button type="button" data-chart="daily">Daily Closed</button>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <svg class="trend-chart" viewBox="0 0 620 280" role="img" aria-label="Sales trend chart">
+              <g class="grid-lines">
+                <line x1="42" x2="600" y1="44" y2="44" />
+                <line x1="42" x2="600" y1="112" y2="112" />
+                <line x1="42" x2="600" y1="180" y2="180" />
+                <line x1="42" x2="600" y1="236" y2="236" />
+              </g>
+              <g class="chart-labels">
+                <text x="0" y="48">100% ($50k)</text>
+                <text x="0" y="116">75% ($37.5k)</text>
+                <text x="0" y="184">50% ($25k)</text>
+              </g>
+              <path class="target-line" d="M42 236 L600 44" />
+              <path class="area-line" id="area-line" d="" />
+              <path class="actual-line" id="actual-line" d="" />
+              <line class="today-line" id="today-line" x1="430" x2="430" y1="44" y2="236" />
+              <circle class="today-point" id="today-point" cx="430" cy="95" r="5" />
+              <line class="hover-line" id="hover-line" x1="0" x2="0" y1="44" y2="236" />
+              <circle class="hover-point" id="hover-point" cx="0" cy="0" r="5" />
+              <rect class="chart-hit-area" id="chart-hit-area" x="42" y="20" width="558" height="240" fill="transparent" />
+            </svg>
+            <div class="chart-tooltip" id="chart-tooltip">
+              <span id="tooltip-vs-target">+0.0% vs target pace</span>
+              <strong id="tooltip-value">$0</strong>
+            </div>
+            <div class="axis-row">
+              <span id="axis-start">Day 1 (Mar 1)</span>
+              <span id="axis-today">Day 20 (Today)</span>
+              <span id="axis-end">Day 31 (Target End)</span>
+            </div>
+          </div>
+        </article>
+
+        <aside class="side-stack">
+          <article class="composition-panel">
+            <div class="panel-heading panel-heading--inline">
+              <h2>Target Composition</h2>
+              <span id="composition-target">$50,000 Target</span>
+            </div>
+            <div class="stack-bar" aria-hidden="true">
+              <span class="stack-bar__achieved" id="bar-achieved"></span>
+              <span class="stack-bar__pipeline" id="bar-pipeline"></span>
+              <span class="stack-bar__gap" id="bar-gap"></span>
+            </div>
+            <div class="composition-legend">
+              <span><i class="dot dot--achieved"></i>Achieved <b id="comp-achieved">$36,500 (73%)</b></span>
+              <span><i class="dot dot--pipeline"></i>Pipeline <b id="comp-pipeline">$8,500 (17%)</b></span>
+              <span><i class="dot dot--gap"></i>Net Gap <b id="comp-gap">$5,000 (10%)</b></span>
+            </div>
+          </article>
+
+          <article class="milestone-panel">
+            <div class="panel-heading panel-heading--inline">
+              <h2>Milestone Pacing</h2>
+              <span id="milestone-summary">2 of 4 cleared</span>
+            </div>
+            <div class="milestone-list" id="milestone-list"></div>
+          </article>
+        </aside>
+      </section>
+
+      <section class="simulator" aria-label="What-if deal simulator">
+        <div>
+          <span class="metric-label metric-label--cyan">Simulate Deal Close</span>
+          <h2>What if you close a pending deal today?</h2>
+          <p>Select an expected deal value to see instant impact on run rate and remaining target.</p>
+        </div>
+        <div class="simulator__controls">
+          <button type="button" data-sim="2500">+ $2,500</button>
+          <button type="button" data-sim="5000">+ $5,000</button>
+          <button type="button" data-sim="10000">+ $10,000</button>
+          <button type="button" id="sim-reset">Reset</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Sales Target Micro-SaaS Engine</span>
+      <span>0.1% Craft Calibration</span>
+      <span>Paced against Q1 Baseline</span>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
