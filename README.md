@@ -2,7 +2,7 @@
 
 A production-grade sales quota tracking dashboard built with plain HTML, CSS, and JavaScript — no frameworks, no build step. Track monthly/quarterly attainment, pacing velocity, milestone progress, and run instant "what-if" deal simulations.
 
-![Sales Target Dashboard preview](.design/screen.png)
+![Sales Target Dashboard preview](screen.png)
 
 ## Features
 
